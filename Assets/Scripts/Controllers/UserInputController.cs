@@ -7,6 +7,7 @@ public class UserInputController
     private NotHeroController playerController;
     private GameController gameController;
     private bool jump;
+    private bool ufoBoost;
 
     public UserInputController(NotHeroController playerController , GameController gameController)
     {
@@ -14,14 +15,30 @@ public class UserInputController
         this.playerController = playerController;
         this.gameController = gameController;
         jump = false;
+        ufoBoost = true;
     }
    
-    public void Updates(float speedMultiplier , RewindController rewindController)
+    public void Updates(float speedMultiplier , RewindController rewindController , bool inUFO)
     {
-       
-        if(Input.GetKeyDown(KeyCode.Space))
+       if(inUFO)
         {
-            jump = true;
+            if(Input.GetKeyDown(KeyCode.D))
+            {
+                playerController.FireBullet();
+            }
+
+            if (Input.GetKey(KeyCode.Space))
+            {
+                ufoBoost = true;
+            }
+        }
+        else
+        {
+            if(Input.GetKeyDown(KeyCode.Space))
+            {
+                jump = true;
+            }
+
         }
 
         if(Input.GetKeyDown(KeyCode.LeftShift))
@@ -46,6 +63,12 @@ public class UserInputController
         {
             playerController.Jump();
             jump = false;
+        }
+
+        if(ufoBoost)
+        {
+            playerController.UFOboost();
+            ufoBoost = false;
         }
     }
 }

@@ -21,13 +21,24 @@ public abstract class PlayerController
     public Transform groundCheck;
     protected const float groundCheckRadius = 0.2f;
 
+    protected bool inUFO;
+    
+    protected GameObject bullet;
+    protected Gun gun;
+    protected Transform bulletsParent;
+
+
+
+
     public virtual void Updates(float jumpHeight, float speed)
     {
         this.jumpHeight = jumpHeight;
         this.speed = speed;
+        
     }
     public virtual void FixedUpdates()
     {
+
 
         isOnGround = false;
 
@@ -43,7 +54,14 @@ public abstract class PlayerController
             }
         }
 
-        PlayerMove();
+        if (inUFO)
+        {
+
+        }
+        
+            PlayerScroll();
+
+
     }
     public virtual void Jump()
     {
@@ -66,14 +84,26 @@ public abstract class PlayerController
         {
             rb.AddForce(new Vector2(0f, jumpHeight), ForceMode2D.Impulse);
         }
+
+        
     }
-    public virtual void PlayerMove()
+    public virtual void PlayerScroll()
     {
         rb.velocity = new Vector2(Time.deltaTime * speed * speedMultiPlier, rb.velocity.y);
     }
     public void SetSpeedMultiplier(float speedMultiPlier)
     {
         this.speedMultiPlier = speedMultiPlier;
+    }
+
+    public virtual void UFOboost()
+    {
+        rb.AddForce(new Vector2(0f, 60f));
+    }
+
+    public virtual void FireBullet()
+    {
+        gun.FireBullet(bullet , bulletsParent);
     }
 
 

@@ -10,9 +10,16 @@ public class NotHeroController : PlayerController
     private float boostStartTimer;
     private float boostMultiplier;
 
-    public NotHeroController(GameObject notHero , HeroController heroController)
+   
+
+    public NotHeroController(GameObject notHero , HeroController heroController , GameObject bullet , Transform bulletsParent) 
     {
         this.player = notHero;
+        
+        this.bullet = bullet;
+        this.gun = player.GetComponentInChildren<Gun>();
+        this.bulletsParent = bulletsParent;
+
         rb = notHero.GetComponent<Rigidbody2D>();
         groundCheck = notHero.transform.Find("GroundCheck");
         groundLayer = LayerMask.GetMask("Ground");
@@ -26,12 +33,16 @@ public class NotHeroController : PlayerController
         boostDelay = 1f;
         boostStartTimer = 0f;
         boostMultiplier = 1.5f;
+
+       
     }
     
 
     public override void Updates(float jumpHeight, float speed)
-    {   
-        if(Time.time <= boostStartTimer)
+    {
+        gun.FixedUpdates();
+
+        if (Time.time <= boostStartTimer)
         {
             base.Updates(jumpHeight, speed * boostMultiplier);
         }
@@ -45,9 +56,9 @@ public class NotHeroController : PlayerController
         base.FixedUpdates();
     }
 
-    public override void PlayerMove()
+    public override void PlayerScroll()
     {
-        base.PlayerMove();
+        base.PlayerScroll();
     }
 
     public override void Jump()
@@ -59,7 +70,10 @@ public class NotHeroController : PlayerController
     public void Boost()
     {
         boostStartTimer = Time.time + boostDelay;
-        //rb.AddForce(new Vector2(0f, 500f) , ForceMode2D.Impulse);
+        rb.AddForce(new Vector2(0f, 3f) , ForceMode2D.Impulse);
         Debug.Log("DONEIT");
     }
+
+
 }
+

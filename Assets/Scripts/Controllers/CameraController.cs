@@ -14,6 +14,6 @@ public class CameraController
 
     public void Updates()
     {
-        camera.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, -10f);
+        camera.transform.position = new Vector3(player.transform.position.x + 4f   , player.transform.position.y + 1f, -10f);
     }
 }

@@ -51,9 +51,9 @@ public class HeroController : PlayerController
         base.FixedUpdates();
     }
 
-    public override void PlayerMove()
+    public override void PlayerScroll()
     {
-        base.PlayerMove();
+        base.PlayerScroll();
     }
 
     public override void Jump()

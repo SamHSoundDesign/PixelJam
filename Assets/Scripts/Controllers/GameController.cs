@@ -13,6 +13,10 @@ public class GameController : MonoBehaviour
     [SerializeField] private float speedMultiplier = 0.75f;
 
     [SerializeField] private GameObject assetPoolGameObject;
+    [SerializeField] private GameObject bullet;
+    [SerializeField] private Transform bulletsParent;
+
+    [SerializeField] private bool inUFO;
 
     //Rewind
     private bool isRewinding = false;
@@ -21,6 +25,7 @@ public class GameController : MonoBehaviour
 
     private NotHeroController notHeroController;
     private HeroController heroController;
+    private EnemyController enemyController;
     private UserInputController userInputController;
     private CameraController cameraController;
     private RewindController rewindController;
@@ -40,7 +45,7 @@ public class GameController : MonoBehaviour
     void Start()
     {
         heroController = new HeroController(hero);
-        notHeroController = new NotHeroController(notHero , heroController);
+        notHeroController = new NotHeroController(notHero , heroController , bullet , bulletsParent);
         userInputController = new UserInputController(notHeroController , this);
         cameraController = new CameraController(cameraObject , notHero);
 
@@ -52,17 +57,19 @@ public class GameController : MonoBehaviour
         }
 
         assetPool = new AssetPool(assetPoolGameObject , this , asteroidPrefab , FindObjectsOfType<Asteroid>());
-        SetupAstroidShowers();
+       
 
         SetupRewindController();
+
+        SetupEnemies();
     }
 
     
     void Update()
     {
-        userInputController.Updates(speedMultiplier , rewindController);
+        userInputController.Updates(speedMultiplier , rewindController , inUFO);
         notHeroController.Updates(jumpHeight , speed);
-        heroController.Updates(jumpHeight , speed);
+        heroController.Updates(jumpHeight , speed );
         cameraController.Updates();
         
     }
@@ -87,28 +94,23 @@ public class GameController : MonoBehaviour
         rewindController = new RewindController(allRewindsArray);
     }
 
-    private void SetupAstroidShowers()
-    {
-        astroidShowers = new List<AstroidShower>();
-
-        AstroidShower[] astroidShowerArray = FindObjectsOfType<AstroidShower>();
-
-        foreach (AstroidShower astroidShower in astroidShowerArray)
-        {
-            astroidShowers.Add(astroidShower);
-            astroidShower.assetPool = assetPool;
-        }
-    }
-
     public GameObject InitiateAsset(GameObject asset)
     {
         return Instantiate(asset);
     }
 
+
     public void NotHeroBoost()
     {
         notHeroController.Boost();
       
+    }
+
+    private void SetupEnemies()
+    {
+        EnemyData[] enemyArray = FindObjectsOfType<EnemyData>();
+
+        enemyController = new EnemyController(enemyArray);
     }
 
 }
